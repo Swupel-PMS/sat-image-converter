@@ -1,0 +1,115 @@
+basePath: /
+definitions:
+  api.Payload:
+    properties:
+      clipping:
+        description: Clips the image
+        type: boolean
+      coordinates:
+        items:
+          $ref: '#/definitions/model.GeoPoint'
+        type: array
+      cut_for_max_zoom:
+        description: Cuts object into smaller ones to archive max zoom if needed.
+          Every feature is also applied on the sub images
+        type: boolean
+      height:
+        description: Initial image height
+        type: integer
+      map_type:
+        description: Map type for image generation
+        type: string
+      optimized_size:
+        description: Reduces the image dimension if possible.
+        type: boolean
+      width:
+        description: Initial image width
+        type: integer
+    type: object
+  converter.Information:
+    properties:
+      clipping:
+        description: Clipping feature enabled
+        type: boolean
+      default_height:
+        description: Default height
+        type: integer
+      default_map_type:
+        description: Default map type
+        type: string
+      default_width:
+        description: Default width
+        type: integer
+      map_types:
+        description: Available map types
+        items:
+          type: string
+        type: array
+      name:
+        description: Module name
+        type: string
+    type: object
+  model.GeoPoint:
+    properties:
+      lat:
+        description: Latitude
+        type: number
+      long:
+        description: Longitude
+        type: number
+    type: object
+host: localhost:10001
+info:
+  contact:
+    email: swupelpms@gmail.com
+    name: Francisco Cardoso
+    url: https://swupel-pms.vercel.app/
+  description: API for converting geo data to image
+  license:
+    name: Copyright 2022 swupelpms
+    url: mailto:swupelpms@gmail.com
+  termsOfService: https://swupel-pms.vercel.app/
+  title: Sat Image API
+  version: "1.0"
+paths:
+  /v1/info:
+    get:
+      description: Informations and Feature set of the converter
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/converter.Information'
+        "500":
+          description: Internal Server Error
+      summary: Information
+      tags:
+      - V1
+  /v1/sat:
+    post:
+      consumes:
+      - application/json
+      description: Generates an image from geo data
+      parameters:
+      - description: ' '
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.Payload'
+      produces:
+      - image/png
+      - ' application/zip'
+      responses:
+        "200":
+          description: OK
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Generate Image
+      tags:
+      - V1
+swagger: "2.0"
