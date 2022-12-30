@@ -1,6 +1,8 @@
 # GeoData to Image API
 
-This is a api for converting geo data to an image
+This is an api for converting geo data to an image. 
+It supports different map types and dimensions, clipping and other image manipulations.
+Check out the OpenAPI doc for the full feature set.
 
 ## Run
 
