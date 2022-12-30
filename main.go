@@ -14,19 +14,8 @@ import (
 )
 
 func main() {
+
 	rand.Seed(time.Now().UnixNano())
-	//debug.SetMaxStack(math.MaxInt)
-	/*
-		f, err := os.Create("cpu.pprof")
-		if err != nil {
-			log.Fatal("could not create CPU profile: ", err)
-		}
-		defer f.Close() // error handling omitted for example
-		if err := pprof.StartCPUProfile(f); err != nil {
-			log.Fatal("could not start CPU profile: ", err)
-		}
-		defer pprof.StopCPUProfile()
-	*/
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
 		c := make(chan os.Signal, 1)

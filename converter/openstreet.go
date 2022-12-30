@@ -5,7 +5,6 @@ import (
 	sm "github.com/flopp/go-staticmaps"
 	"image"
 	"image/color"
-	"image/draw"
 	"io"
 	"sat-api/geometry"
 	image2 "sat-api/image"
@@ -125,7 +124,7 @@ func (o OpenStreet) convertToImageResult(configuration Configurations, area *sm.
 	var raw io.Reader
 	img, err := o.generateImg(configuration, area)
 	if err == nil {
-		raw, err = ImageToPNGReader(img)
+		raw, err = image2.ToPNGReader(img)
 	}
 	return Image{
 		Data:  raw,
@@ -146,16 +145,16 @@ func (o OpenStreet) generateImg(configuration Configurations, area *sm.Area) (im
 	}
 	data := model.NewGeoDataFromLatLng(area.Positions)
 	if configuration.Clipping {
-		img = o.clip(img, data, tr)
+		img = o.clip(img, data, tr, configuration.OptimizedSize)
 	} else if configuration.OptimizedSize {
 		img = o.optimizeSize(img, data, tr)
 	}
 	return img, nil
 }
 
-func (o OpenStreet) clip(i image.Image, data model.GeoData, transformer *sm.Transformer) image.Image {
+func (o OpenStreet) clip(i image.Image, data model.GeoData, transformer *sm.Transformer, crop bool) image.Image {
 	absolutPositions := o.absolutPositions(data, transformer)
-	xMin, yMin, xMax, yMax := calculateOptimizedSize(absolutPositions, 0)
+	xMin, yMin, xMax, yMax := image2.CalculateOptimizedSize(absolutPositions, 0)
 	points := make([]*geometry.Vector, 0)
 	for _, pos := range absolutPositions {
 		points = append(points, geometry.NewVector(pos.X, pos.Y, 0))
@@ -171,15 +170,13 @@ func (o OpenStreet) clip(i image.Image, data model.GeoData, transformer *sm.Tran
 			Y: yMax,
 		},
 	})
-	dst := image.NewRGBA(i.Bounds())
-	// TODO: refactor draw mask, to crop automatically
-	draw.DrawMask(dst, dst.Bounds(), i, image.Point{}, imagePoly, image.Point{}, draw.Over)
-	return Crop(dst, image.Rect(xMin, yMin, xMax, yMax))
+	dst := imagePoly.Clip(i, crop)
+	return dst
 }
 
 func (o OpenStreet) optimizeSize(i image.Image, data model.GeoData, transformer *sm.Transformer) image.Image {
-	xMin, yMin, xMax, yMax := calculateOptimizedSize(o.absolutPositions(data, transformer), o.OptimizedSizeToleration)
-	return Crop(i, image.Rect(xMin, yMin, xMax, yMax))
+	xMin, yMin, xMax, yMax := image2.CalculateOptimizedSize(o.absolutPositions(data, transformer), o.OptimizedSizeToleration)
+	return image2.Crop(i, image.Rect(xMin, yMin, xMax, yMax))
 }
 
 func (o OpenStreet) absolutPositions(data model.GeoData, transformer *sm.Transformer) []model.Point {

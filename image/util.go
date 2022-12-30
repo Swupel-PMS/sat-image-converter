@@ -1,4 +1,4 @@
-package converter
+package image
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"sat-api/model"
 )
 
-func calculateOptimizedSize(points []model.Point, tolerance float64) (int, int, int, int) {
+func CalculateOptimizedSize(points []model.Point, tolerance float64) (int, int, int, int) {
 	xMin := math.MaxFloat64
 	xMax := 0.0
 	yMin := math.MaxFloat64
@@ -34,7 +34,7 @@ func Crop(i image.Image, rectangle image.Rectangle) image.Image {
 	return newImg.SubImage(rectangle)
 }
 
-func ImageToPNGReader(img image.Image) (io.Reader, error) {
+func ToPNGReader(img image.Image) (io.Reader, error) {
 	buf := new(bytes.Buffer)
 	err := png.Encode(buf, img)
 	if err != nil {

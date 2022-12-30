@@ -20,7 +20,9 @@ require (
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
+	github.com/kr/pretty v0.3.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/swaggo/files v1.0.0 // indirect
 	github.com/tkrajina/gpxgo v1.2.1 // indirect
 	golang.org/x/image v0.2.0 // indirect
