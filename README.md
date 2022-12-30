@@ -2,6 +2,18 @@
 
 This is a api for converting geo data to an image
 
+## Run
+
+- Install Go [https://go.dev/dl/](https://go.dev/dl/)
+- Run
+````shell
+go run main.go
+````
+
+## Environment variables
+
+
+
 ## Documentation
 
 Run th api and open ``localhost:10001/swagger/index.html``

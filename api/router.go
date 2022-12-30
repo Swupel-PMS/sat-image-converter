@@ -55,7 +55,7 @@ func Start(ctx context.Context, module Module) error {
 	r.Get("/swagger/*", httpSwagger.Handler())
 	s := http.Server{
 		Handler: r,
-		Addr:    fmt.Sprintf(":%s", "10001"),
+		Addr:    fmt.Sprintf(":%s", "10001"), // TODO: change to flag or env
 	}
 	go func() {
 		<-ctx.Done()
